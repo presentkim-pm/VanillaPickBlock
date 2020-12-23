@@ -21,9 +21,10 @@ if you pick Block in PMMP, the item in your hands is changed to the block item.
 This is different from working in vanilla.  
 <br>  
 In vanilla it works like :  
-- When already item in hotbar, just switching hand to that hotbar.  
+- When already item in hotbar, just switching hand to that hotbar.
+- When already item in inventory, just swaping hand with inventory slot  
 - When new item, Set first remaining hot bar to block-item and switching hand to that hotbar.  
-- When hotbar is fulled, Set item in hand to block-item.  
+- When hotbar is fulled, Set item in hand to block-item, And if item in hand, move to inventory.
 
 This plugin actually changes it to work that way.  
   

@@ -1,7 +1,7 @@
 ---
 name: VanillaPickBlock
 main: kim\present\vanillapickblock\VanillaPickBlock
-version: 1.0.0
+version: 1.1.0
 api: 3.0.0
 author: PresentKim
 description: Make PickBlock work the same as vanilla.

@@ -37,24 +37,46 @@ class VanillaPickBlock extends PluginBase implements Listener{
     public function onPlayerPickBlock(PlayerBlockPickEvent $event) : void{
         $event->setCancelled();
 
-        $inventory = $event->getPlayer()->getInventory();
+        $player = $event->getPlayer();
+        $inventory = $player->getInventory();
+        $resultItem = $event->getResultItem();
         $hatbarSize = $inventory->getHotbarSize();
-        $item = $event->getResultItem();
-        $emptyHatbar = null;
-        for($i = 0; $i < $hatbarSize; ++$i){
-            $hatbar = $inventory->getItem($i);
-            if($hatbar->equals($item, true, true)){
-                $inventory->setHeldItemIndex($i);
-                return;
-            }elseif($emptyHatbar === null && $hatbar->isNull()){
-                $emptyHatbar = $i;
+
+        $originSlot = -1;
+        foreach($inventory->getContents() as $i => $item){ //Find origin slot (with exact-check, and without count-cehck)
+            if($resultItem->equals($item,true,true)){
+                $resultItem = $item;
+                $originSlot = $i;
+                break;
             }
         }
-        if($emptyHatbar !== null){
-            $inventory->setItem($emptyHatbar, $item);
-            $inventory->setHeldItemIndex($emptyHatbar);
-        }else{
-            $inventory->setItemInHand($item);
+        if($originSlot >= 0 && $originSlot < $hatbarSize){ //If origin item in hotbar, set held slot to orgin slot
+            $inventory->setHeldItemIndex($originSlot);
+            return;
+        }
+
+        $targetItem = $inventory->getItemInHand();
+        $targetSlot = $inventory->getHeldItemIndex();
+        if(!$targetItem->isNull()){
+            for($i = 0; $i < $hatbarSize; ++$i){ //Find empty hotbar slot
+                $item = $inventory->getItem($i);
+                if($item->isNull()){
+                    $targetItem = $item;
+                    $targetSlot = $i;
+                    $inventory->setHeldItemIndex($targetSlot);
+                    break;
+                }
+            }
+        }
+
+        if($originSlot !== -1){ //If found origin item, swap target slot with origin slot
+            $inventory->setItem($targetSlot, $resultItem);
+            $inventory->setItem($originSlot, $targetItem);
+        }elseif($player->isCreative()){ //If not found origin item and player is creative mode, give item.
+            $inventory->setItem($targetSlot, $resultItem);
+            if(!$targetItem->isNull()){ //If target item is not null, return target item into inventory.
+                $inventory->addItem($targetItem);
+            }
         }
     }
 }
