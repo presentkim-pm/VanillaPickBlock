@@ -35,7 +35,7 @@ class VanillaPickBlock extends PluginBase implements Listener{
 
     /** @priority LOWEST */
     public function onPlayerPickBlock(PlayerBlockPickEvent $event) : void{
-        $event->setCancelled();
+        $event->cancel();
 
         $player = $event->getPlayer();
         $inventory = $player->getInventory();
