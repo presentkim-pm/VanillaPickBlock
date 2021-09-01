@@ -28,9 +28,22 @@ use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerBlockPickEvent;
 use pocketmine\plugin\PluginBase;
 
+use function is_dir;
+use function rmdir;
+use function scandir;
+
 class VanillaPickBlock extends PluginBase implements Listener{
     public function onEnable() : void{
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
+
+        /**
+         * This is a plugin that does not use data folders.
+         * Delete the unnecessary data folder of this plugin for users.
+         */
+        $dataFolder = $this->getDataFolder();
+        if(is_dir($dataFolder) && empty(scandir($dataFolder))){
+            rmdir($dataFolder);
+        }
     }
 
     /** @priority LOWEST */
@@ -44,7 +57,7 @@ class VanillaPickBlock extends PluginBase implements Listener{
 
         $originSlot = -1;
         foreach($inventory->getContents() as $i => $item){ //Find origin slot (with exact-check, and without count-cehck)
-            if($resultItem->equals($item,true,true)){
+            if($resultItem->equals($item, true, true)){
                 $resultItem = $item;
                 $originSlot = $i;
                 break;
