@@ -28,6 +28,7 @@ use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerBlockPickEvent;
 use pocketmine\plugin\PluginBase;
 
+use function count;
 use function is_dir;
 use function rmdir;
 use function scandir;
@@ -41,7 +42,7 @@ class VanillaPickBlock extends PluginBase implements Listener{
          * Delete the unnecessary data folder of this plugin for users.
          */
         $dataFolder = $this->getDataFolder();
-        if(is_dir($dataFolder) && empty(scandir($dataFolder))){
+        if(is_dir($dataFolder) && count(scandir($dataFolder)) <= 2){
             rmdir($dataFolder);
         }
     }
