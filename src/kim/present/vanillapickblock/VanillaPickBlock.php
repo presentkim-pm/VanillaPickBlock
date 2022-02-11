@@ -54,7 +54,7 @@ class VanillaPickBlock extends PluginBase implements Listener{
         $player = $event->getPlayer();
         $inventory = $player->getInventory();
         $resultItem = $event->getResultItem();
-        $hatbarSize = $inventory->getHotbarSize();
+        $hotbarSize = $inventory->getHotbarSize();
 
         $originSlot = -1;
         foreach($inventory->getContents() as $i => $item){ //Find origin slot (with exact-check, and without count-cehck)
@@ -64,7 +64,7 @@ class VanillaPickBlock extends PluginBase implements Listener{
                 break;
             }
         }
-        if($originSlot >= 0 && $originSlot < $hatbarSize){ //If origin item in hotbar, set held slot to orgin slot
+        if($originSlot >= 0 && $originSlot < $hotbarSize){ //If origin item in hotbar, set held slot to orgin slot
             $inventory->setHeldItemIndex($originSlot);
             return;
         }
@@ -72,7 +72,7 @@ class VanillaPickBlock extends PluginBase implements Listener{
         $targetItem = $inventory->getItemInHand();
         $targetSlot = $inventory->getHeldItemIndex();
         if(!$targetItem->isNull()){
-            for($i = 0; $i < $hatbarSize; ++$i){ //Find empty hotbar slot
+            for($i = 0; $i < $hotbarSize; ++$i){ //Find empty hotbar slot
                 $item = $inventory->getItem($i);
                 if($item->isNull()){
                     $targetItem = $item;
